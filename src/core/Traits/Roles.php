@@ -16,6 +16,10 @@ trait Roles
 
     }
 
+    public function getDefaultHomePageByID($roleID){
+        return $this->roleService->fetchDefaultHomePageByID($roleID)['default_home'];
+    }
+
     public function updateUserRole($account_id, $role_id, $userModified){
         $this->roleService->changeUserRole($account_id, $role_id, $userModified);
     }
@@ -32,8 +36,8 @@ trait Roles
         return $this->roleService->fetchRoleByID($roleID);
     }
     
-    public function newRole($roleName, $userCreated){
-        $this->roleService->insertRole($roleName, $userCreated);
+    public function newRole($roleName, $userCreated, $defaultHome){
+        $this->roleService->insertRole($roleName, $userCreated, $defaultHome);
     }
 
     public function deleteRole($role_id){

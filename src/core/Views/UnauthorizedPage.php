@@ -7,7 +7,7 @@ class UnauthorizedPage{
      * @param string $message Custom error message (optional)
      * @return string The HTML content
      */
-    public static function render($message = "You do not have permission to access this page.")
+    public static function render($message = "You do not have permission to access this page.", $url = '/')
     {
         return <<<HTML
         <!DOCTYPE html>
@@ -60,7 +60,7 @@ class UnauthorizedPage{
         <div class="container">
             <h1>403</h1>
             <p>{$message}</p>
-            <a href="/">Go Back Home</a>
+            <a href="{$url}">Go Back Home</a>
         </div>
 
         </body>

@@ -33,6 +33,16 @@ class ReportService{
         return PgsqlResultConverter::array($results);
     }
 
+    public function fetchReportByName($reportName){
+        $results = $this->pgsqlInstance->select()
+        ->from(TableNames::Reports->value)
+        ->where("report_name = '$reportName'")
+        ->readData();
+    
+    if(!$results) return [];
+    return PgsqlResultConverter::array($results)[0];
+    }
+
     public function fetchReportByID($reportID){
         
         $results = $this->pgsqlInstance->select()
@@ -43,91 +53,19 @@ class ReportService{
         return PgsqlResultConverter::array($results)[0];
     }
 
-    // public function getRoleByAccountID($accountID){
-    //     return $this->pgsqlInstance->select()
-    //         ->from(TableNames::Roles->value.' r')
-    //         ->join(Tablenames::UserHasRoles->value.' uhr', 'r.role_id = uhr.role_id','inner')
-    //         ->where('account_id ='.$accountID)
-    //         ->readData();
-        
-    // }
-    
-    // //name the mothod assignRoleToUser for traits
-    // public function insertUserRole($account_id, $role_id){
+    public function insertModule($reportName){
        
-    //     $this->pgsqlInstance->beginTransaction();
-    //     try{
-    //         $this->pgsqlInstance->table(TableNames::UserHasRoles->value)
-	// 			->insert_set('account_id',$account_id)
-	// 			->insert_set('role_id',$role_id)
-	// 			->insertData();
+        $this->pgsqlInstance->beginTransaction();
+        try{
+            $this->pgsqlInstance->table(TableNames::Reports->value)
+				->insert_set('report_name',$reportName)
+				->insertData();
 
-    //         $this->pgsqlInstance->commit();
-	// 	} catch (\Exception $e) {
-    //         $this->pgsqlInstance->rollback();
+            $this->pgsqlInstance->commit();
+		} catch (\Exception $e) {
+            $this->pgsqlInstance->rollback();
 
-	// 		throw new \Exception($e->getMessage());
-    //     }
-    // }
-
-    // //name the mothod reassignRoleToUser for traits
-    // public function changeUserRole($account_id, $role_id){
-    //     $this->pgsqlInstance->beginTransaction();
-    //     try{
-    //         $this->pgsqlInstance->table(TableNames::UserHasRoles->value)
-    //             ->setPrimaryKey('account_id')
-    //             ->setPrimaryID($account_id)
-    //             ->update_set('role_id',$role_id) //date("Y-m-d h:i:s a", time()))
-    //             ->updateData()
-    //             ;
-    //         $this->pgsqlInstance->commit();
-    //     } catch (\Exception $e) {
-    //         $this->pgsqlInstance->rollback();
-
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
-
-    // //name the mothod removeUserRole for traits
-    // public function detachUserRole($account_id){
-    //     $this->pgsqlInstance->beginTransaction();
-    //     try{
-    //         $this->pgsqlInstance->deleteData(TableNames::UserHasRoles->value,'acount_id='.$account_id);
-                
-    //         $this->pgsqlInstance->commit();
-    //     } catch (\Exception $e) {
-    //         $this->pgsqlInstance->rollback();
-
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
-
-    // public function insertRole($roleName){
-    //     $this->pgsqlInstance->beginTransaction();
-    //     try{
-    //         $this->pgsqlInstance->table(TableNames::Roles->value)
-	// 			->insert_set('name',$roleName)
-	// 			->insertData();
-
-    //         $this->pgsqlInstance->commit();
-	// 	} catch (\Exception $e) {
-    //         $this->pgsqlInstance->rollback();
-
-	// 		throw new \Exception($e->getMessage());
-    //     }
-    // }
-
-    // //name the mothod removeUserRole for traits
-    // public function removeRole($role_id){
-    //     $this->pgsqlInstance->beginTransaction();
-    //     try{
-    //         $this->pgsqlInstance->deleteData(TableNames::Roles->value,'role_id='.$role_id);
-                
-    //         $this->pgsqlInstance->commit();
-    //     } catch (\Exception $e) {
-    //         $this->pgsqlInstance->rollback();
-
-    //         throw new \Exception($e->getMessage());
-    //     }
-    // }
+			throw new \Exception($e->getMessage());
+        }
+    }
 }

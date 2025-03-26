@@ -2,51 +2,59 @@
 namespace jdTonido\RBAC\core\Traits;
 
 use jdTonido\RBAC\core\ModuleService;
-use jdTonido\RBAC\core\RoleService;
-use jdTonido\RBAC\Exceptions\InvalidPGSQLInstance;
-use jdTonido\RBAC\Factories\PgsqlDriverFactory;
 
 trait Modules
 {
-    public ?\driver\pgsqlDriver $pgsqlInstance = null;
-    public ModuleService $moduleService;
+     public ?\driver\pgsqlDriver $pgsqlInstance = null;
+     public ModuleService $moduleService;
 
-    private $moduleName;
+     private $moduleName;
+     private $url = '';
 
-    public function initModuleService(){
-        // Initialize RoleService with the pgsqlDriver instance
-        $this->moduleService = new ModuleService($this->pgsqlInstance);
+     public function initModuleService(){
+          // Initialize RoleService with the pgsqlDriver instance
+          $this->moduleService = new ModuleService($this->pgsqlInstance);
 
-    }
+     }
 
-   public function fetchModules() {
-        
-        return $this->moduleService->getModules();
-   }
+     public function fetchModules() {
+          
+          return $this->moduleService->getModules();
+     }
 
-   public function getModulesWithPermissionsByRole($role_id){
-        return $this->moduleService->fetchModulesWithPermissionsByRole($role_id);
-   }
+     public function getListURL(){
+          return $this->moduleService->fetchURL();
+     }
 
-   public function getModuleByID($moduleId){
-        return $this->moduleService->fetchModuleByID($moduleId);
-   }
+     public function getModulesWithPermissionsByRole($role_id){
+          return $this->moduleService->fetchModulesWithPermissionsByRole($role_id);
+     }
 
-   public function registerModule($moduleName){
-     try{
-          $this->moduleName = $moduleName;
+     public function getModuleByID($moduleId){
+          return $this->moduleService->fetchModuleByID($moduleId);
+     }
 
-          if( !$this->moduleService->fetchModuleByName($moduleName) ){
-               $this->moduleService->insertModule($moduleName);
+     public function registerURL($url){
+          $this->url = $url;
+          return $this;
+     }
+
+     public function registerModule($moduleName){
+          try{
+               $this->moduleName = $moduleName;
+
+               if( !$this->moduleService->fetchModuleByName($moduleName) ){
+                    $this->moduleService->insertModule($moduleName, $this->url);
+               }
+               
           }
+          catch(\Exception $e){
+               throw new \Exception($e->getMessage(), 405); 
+          }
+     
      }
-     catch(\Exception $e){
-          throw new \Exception($e->getMessage(), 405); 
-     }
-    
-   }
 
-   public function getRegisterModuleName(){
-     return $this->moduleName;
-   }
+     public function getRegisterModuleName(){
+          return $this->moduleName;
+     }
 }

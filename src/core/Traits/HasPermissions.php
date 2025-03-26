@@ -22,12 +22,24 @@ trait HasPermissions
         return $this->permissionsService->getPermissionsByRoleIdAndModuleName($roleID, $moduleName);        
     }
 
+    public function reportsPermissions($roleID, $reportName){
+        return $this->permissionsService->getPermissionsByRoleIdAndReportName($roleID, $reportName);        
+    }
+
     public function getPermissionIDByName($permissionName){
         return $this->permissionsService->fetchPermissionIDByName($permissionName);
     }
 
     public function getPermissionByID($permissionName){
         return $this->permissionsService->fetchPermissionByID($permissionName);
+    }
+
+    public function getReportsWithPermissionsByRoleID($roleID){
+        return $this->permissionsService->getReportsPermissionsByRoleId($roleID);
+    }
+
+    public function getModulesWithPermissionsByRoleID($roleID){
+        return $this->permissionsService->getModulesPermissionsByRoleId($roleID);
     }
 
     public function processModulePermission($roleID, $permissionID, $moduleID, $isAllow = true, $userCreated){

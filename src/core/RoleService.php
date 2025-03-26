@@ -22,6 +22,15 @@ class RoleService{
         // return $roles;
     }
 
+    public function fetchDefaultHomePageByID($roleID){
+        $results = $this->pgsqlInstance->select('default_home')
+            ->from(TableNames::Roles->value)
+            ->where("role_id = '$roleID'")
+            ->readData();
+
+        return PgsqlResultConverter::array($results)[0];
+    }
+
     public function fetchRoleByID($roleID){
         $results = $this->pgsqlInstance->select()
             ->from(TableNames::Roles->value)
@@ -92,12 +101,13 @@ class RoleService{
         }
     }
 
-    public function insertRole($roleName, $userCreated){
+    public function insertRole($roleName, $userCreated, $defaultHome){
         $this->pgsqlInstance->beginTransaction();
         try{
             $this->pgsqlInstance->table(TableNames::Roles->value)
 				->insert_set('name',$roleName)
                 ->insert_set('user_created',$userCreated)
+                ->insert_set('default_home',$defaultHome)
 				->insertData();
 
             $this->pgsqlInstance->commit();

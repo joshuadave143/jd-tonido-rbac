@@ -5,8 +5,8 @@ use jdTonido\RBAC\core\Views\UnauthorizedPage;
 
 trait Views
 {
-    public function UnauthorizedPage($message = "You do not have permission to access this page."){
-        echo UnauthorizedPage::render($message);
+    public function UnauthorizedPage($message = "You do not have permission to access this page.", $url = '/'){
+        echo UnauthorizedPage::render($message, $url);
         exit();
     }
 }

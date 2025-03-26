@@ -8,6 +8,7 @@ trait RbacSqlTables{
             CREATE TABLE IF NOT EXISTS "rbac_roles" (
                 "role_id" SERIAL NOT NULL,
                 "name" VARCHAR(50) NOT NULL UNIQUE,
+                "default_home" VARCHAR(100) NULL DEFAULT NULL,
                 "user_created" VARCHAR(50) NOT NULL,
                 "date_created" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY ("role_id")
@@ -53,6 +54,7 @@ trait RbacSqlTables{
             CREATE TABLE IF NOT EXISTS "rbac_modules" (
                 "module_id" SERIAL NOT NULL,
                 "name" VARCHAR(100) NOT NULL,
+                "default_home" VARCHAR(100) NULL DEFAULT NULL,
                 PRIMARY KEY ("module_id"),
                 CONSTRAINT unique_module_name UNIQUE ("name")
             )

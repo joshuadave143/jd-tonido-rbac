@@ -4,7 +4,8 @@ namespace jdTonido\RBAC\core;
 
 use jdTonido\RBAC\Enums\Permissions;
 use jdTonido\RBAC\Enums\TableNames;
-use jdTonido\RBAC\helpers\DynamicMethodWrapperForModulePermission;
+use jdTonido\RBAC\helpers\DynamicMethodWrapperForPermission;
+use jdTonido\RBAC\helpers\NestedDynamicMethodWrapperForPermission;
 use jdTonido\RBAC\helpers\PgsqlResultConverter;
 
 class PermissionsService{
@@ -35,7 +36,47 @@ class PermissionsService{
         $permissionsArray = PgsqlResultConverter::array($results);
         $permissionsArray = array_combine(array_column($permissionsArray, "name"), array_column($permissionsArray, "name"));
         
-        return new DynamicMethodWrapperForModulePermission($permissionsArray,$this->pgsqlInstance);
+        return new DynamicMethodWrapperForPermission($permissionsArray,$this->pgsqlInstance);
+    }
+
+    public function getPermissionsByRoleIdAndReportName($roleID, $reportName){
+        $results = $this->pgsqlInstance->select('p.name')
+            ->from(TableNames::ReportHasPermissions->value.' rhp')
+            ->join(TableNames::Reports->value.' r',' rhp.report_id = r.report_id','left')
+            ->join(TableNames::Permissions->value.' p','rhp.permission_id = p.permission_id','left')
+            ->where("rhp.role_id = ".$roleID." AND r.report_name = '".$reportName."'")
+            ->readData();
+
+        $permissionsArray = PgsqlResultConverter::array($results);
+        $permissionsArray = array_combine(array_column($permissionsArray, "name"), array_column($permissionsArray, "name"));
+        
+        return new DynamicMethodWrapperForPermission($permissionsArray,$this->pgsqlInstance);
+    }
+
+    public function getReportsPermissionsByRoleId($roleID){
+        $results = $this->pgsqlInstance->select('r.report_name as mr_name,p.name')
+            ->from(TableNames::ReportHasPermissions->value.' rhp')
+            ->join(TableNames::Reports->value.' r',' rhp.report_id = r.report_id','left')
+            ->join(TableNames::Permissions->value.' p','rhp.permission_id = p.permission_id','left')
+            ->where("rhp.role_id = ".$roleID)
+            ->readData();
+
+        $permissionsArray = PgsqlResultConverter::array($results);
+
+        return new NestedDynamicMethodWrapperForPermission($permissionsArray,$this->pgsqlInstance);
+    }
+
+    public function getModulesPermissionsByRoleId($roleID){
+        $results = $this->pgsqlInstance->select('m.name as mr_name,p.name')
+            ->from(TableNames::ModuleHasPermissions->value.' mhp')
+            ->join(TableNames::Modules->value.' m',' mhp.module_id = m.module_id','left')
+            ->join(TableNames::Permissions->value.' p','mhp.permission_id = p.permission_id','left')
+            ->where("mhp.role_id = ".$roleID)
+            ->readData();
+
+        $permissionsArray = PgsqlResultConverter::array($results);
+        // return $permissionsArray;
+        return new NestedDynamicMethodWrapperForPermission($permissionsArray);
     }
 
     public function fetchPermissionIDByName($permissionName){
@@ -46,6 +87,7 @@ class PermissionsService{
 
         return PgsqlResultConverter::array($results)[0];
     }
+    
 
     public function fetchPermissionByID($permissionID){
         $results = $this->pgsqlInstance->select()
@@ -62,6 +104,16 @@ class PermissionsService{
             ->where("role_id = $roleID
                     and permission_id = $permissionID
                     and module_id = $moduleID"
+                    )
+            ->readData()?true:false;
+    }
+
+    public function hasPermissionForReport($roleID, $permissionID, $reportID){
+        return $this->pgsqlInstance->select()
+            ->from(TableNames::ReportHasPermissions->value)
+            ->where("role_id = $roleID
+                    and permission_id = $permissionID
+                    and report_id = $reportID"
                     )
             ->readData()?true:false;
     }
@@ -258,7 +310,7 @@ class PermissionsService{
             $permissionID = $this->fetchPermissionIDByName($permissionName)['permission_id'];
 
             foreach($reports as $report){
-                if( $this->hasPermissionForModule($roleID, $permissionID, $report['report_id'])){
+                if( $this->hasPermissionForReport($roleID, $permissionID, $report['report_id'])){
                     continue;
                 }
                 $this->pgsqlInstance->table(TableNames::ReportHasPermissions->value)
