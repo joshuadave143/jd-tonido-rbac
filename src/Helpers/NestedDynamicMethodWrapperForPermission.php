@@ -32,8 +32,8 @@ class NestedDynamicMethodWrapperForPermission {
                 public function __call($name, $arguments) {
                     $permission = ucfirst($name);
                     return in_array($permission, $this->permissions) 
-                        ? "Access granted for '$permission'"
-                        : "Access denied for '$permission'";
+                        ? "Access granted"
+                        : "Access denied";
                 }
             };
         }

@@ -54,7 +54,7 @@ trait RbacSqlTables{
             CREATE TABLE IF NOT EXISTS "rbac_modules" (
                 "module_id" SERIAL NOT NULL,
                 "name" VARCHAR(100) NOT NULL,
-                "default_home" VARCHAR(100) NULL DEFAULT NULL,
+                "url" VARCHAR(100) NULL DEFAULT NULL,
                 PRIMARY KEY ("module_id"),
                 CONSTRAINT unique_module_name UNIQUE ("name")
             )
