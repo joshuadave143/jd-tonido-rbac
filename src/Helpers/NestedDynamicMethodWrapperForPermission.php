@@ -4,9 +4,10 @@ namespace jdTonido\RBAC\helpers;
 
 use jdTonido\RBAC\core\Views\UnauthorizedPage;
 use jdTonido\RBAC\Enums\TableNames;
+use jdTonido\RBAC\core\Traits\Views;
 
 class NestedDynamicMethodWrapperForPermission {
-    
+    use Views;
     private array $groupedPermissions = [];
 
     public function __construct(private array $data) {
@@ -22,6 +23,7 @@ class NestedDynamicMethodWrapperForPermission {
         $moduleName = ucfirst($name);
        
         if (isset($this->groupedPermissions[$moduleName])) {
+ 
             return new class($this->groupedPermissions[$moduleName]) {
                 private array $permissions;
 
@@ -31,13 +33,21 @@ class NestedDynamicMethodWrapperForPermission {
 
                 public function __call($name, $arguments) {
                     $permission = ucfirst($name);
-                    return in_array($permission, $this->permissions) 
-                        ? "Access granted"
-                        : "Access denied";
+                    return in_array($permission, $this->permissions);
                 }
             };
         }
-        return "User does not have the necessary role to access this page.";
+        
+        return new class($this) {
+           
+            public function __construct( private NestedDynamicMethodWrapperForPermission $parent) {
+            }
+            public function __call($name, $arguments) {
+                // dd($arguments[0] == '403');
+                if(@$arguments[0] == '403') $this->parent->UnauthorizedPage();
+                return false;
+            }
+        };
         // return "Invalid module: '$moduleName'.";
     }
 
