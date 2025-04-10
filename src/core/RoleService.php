@@ -3,7 +3,7 @@
 namespace jdTonido\RBAC\core;
 
 use jdTonido\RBAC\Enums\TableNames;
-use jdTonido\RBAC\helpers\PgsqlResultConverter;
+use jdTonido\RBAC\Helpers\PgsqlResultConverter;
 
 class RoleService{
 

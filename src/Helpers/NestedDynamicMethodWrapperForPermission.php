@@ -1,6 +1,6 @@
 <?php
 
-namespace jdTonido\RBAC\helpers;
+namespace jdTonido\RBAC\Helpers;
 
 use jdTonido\RBAC\core\Views\UnauthorizedPage;
 use jdTonido\RBAC\Enums\TableNames;

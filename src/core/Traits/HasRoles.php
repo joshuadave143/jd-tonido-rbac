@@ -4,7 +4,7 @@ namespace jdTonido\RBAC\core\Traits;
 use jdTonido\RBAC\core\RoleService;
 use jdTonido\RBAC\Exceptions\InvalidPGSQLInstance;
 use jdTonido\RBAC\Factories\PgsqlDriverFactory;
-use jdTonido\RBAC\helpers\PgsqlResultConverter;
+use jdTonido\RBAC\Helpers\PgsqlResultConverter;
 
 trait HasRoles
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace jdTonido\RBAC\helpers;
+namespace jdTonido\RBAC\Helpers;
 
 /**
  * PgsqlResultConverter

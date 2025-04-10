@@ -4,9 +4,9 @@ namespace jdTonido\RBAC\core;
 
 use jdTonido\RBAC\Enums\Permissions;
 use jdTonido\RBAC\Enums\TableNames;
-use jdTonido\RBAC\helpers\DynamicMethodWrapperForPermission;
-use jdTonido\RBAC\helpers\NestedDynamicMethodWrapperForPermission;
-use jdTonido\RBAC\helpers\PgsqlResultConverter;
+use jdTonido\RBAC\Helpers\DynamicMethodWrapperForPermission;
+use jdTonido\RBAC\Helpers\NestedDynamicMethodWrapperForPermission;
+use jdTonido\RBAC\Helpers\PgsqlResultConverter;
 
 class PermissionsService{
     /**
