@@ -42,7 +42,7 @@ trait HasPermissions
         return $this->permissionsService->getModulesPermissionsByRoleId($roleID);
     }
 
-    public function processModulePermission($roleID, $permissionID, $moduleID, $isAllow = true, $userCreated){
+    public function processModulePermission($roleID, $permissionID, $moduleID, $userCreated, $isAllow = true){
        
         if($isAllow){
             return $this->permissionsService->allowModulePermission($roleID, $permissionID, $moduleID, $userCreated);
@@ -51,7 +51,7 @@ trait HasPermissions
         return $this->permissionsService->denyModulePermission($roleID, $permissionID, $moduleID, $userCreated);
     }
 
-    public function processModulePermissions($permissionName, $roleID, $isAllow = true, $userCreated){
+    public function processModulePermissions($permissionName, $roleID, $userCreated, $isAllow = true){
        
         if($isAllow){
             return $this->permissionsService->allowModulePermissions($permissionName, $roleID, $userCreated);
@@ -60,7 +60,7 @@ trait HasPermissions
         return $this->permissionsService->denyModulePermissions($permissionName, $roleID, $userCreated);
     }
 
-    public function processReportPermission($roleID, $permissionID, $reportID, $isAllow = true, $userCreated){
+    public function processReportPermission($roleID, $permissionID, $reportID, $userCreated, $isAllow = true){
        
         if($isAllow){
             return $this->permissionsService->allowReportPermission($roleID, $permissionID, $reportID, $userCreated);
@@ -69,7 +69,7 @@ trait HasPermissions
         return $this->permissionsService->denyReportPermission ($roleID, $permissionID, $reportID, $userCreated);
     }
 
-    public function processReportPermissions($permissionName, $roleID, $isAllow = true, $userCreated){
+    public function processReportPermissions($permissionName, $roleID, $userCreated, $isAllow = true){
        
         if($isAllow){
             return $this->permissionsService->allowReportPermissions($permissionName, $roleID, $userCreated);
