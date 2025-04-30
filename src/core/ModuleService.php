@@ -72,7 +72,7 @@ class ModuleService{
     public function fetchURL(){
         $results = $this->pgsqlInstance->select('url')
             ->from(TableNames::Modules->value)
-            ->where('url is not null')
+            ->where("url <> ''")
             ->readData();
 
         return PgsqlResultConverter::array($results);
